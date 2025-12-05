@@ -1,36 +1,166 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Video Query System
 
-## Getting Started
+A real-time video analytics application built with Next.js that allows users to query video content using natural language. Supports YouTube live streams, video files, and webcam feeds with AI-powered analysis using Google's Gemini API.
 
-First, run the development server:
+![Next.js](https://img.shields.io/badge/Next.js-15-black) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue) ![Gemini API](https://img.shields.io/badge/Gemini-2.0%20Flash-purple)
 
+## Features
+
+- **AI-Powered Analysis** - Gemini 2.0 Flash for video understanding
+- **Multiple Input Sources**
+  - YouTube live streams
+  - Video file uploads
+  - Webcam capture
+- **Natural Language Queries** - Ask questions in plain English
+- **Real-Time Object Detection** - COCO-SSD model for live object detection
+- **Advanced Computer Vision** - Face detection, hand tracking, and pose estimation
+- **Session Analytics** - Track and export detection data
+
+## Prerequisites
+
+- Node.js 18 or higher
+- npm or yarn
+- Gemini API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
+
+## Installation
+
+1. Clone the repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/nihal-5/video-query.git
+cd video-query
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Set up environment variables
+```bash
+cp .env.example .env.local
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Add your Gemini API key to `.env.local`:
+```
+GEMINI_API_KEY=your_actual_api_key_here
+```
 
-## Learn More
+4. Run the development server
+```bash
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Framework**: Next.js 15 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **AI/ML**: 
+  - Google Gemini 2.0 Flash API
+  - TensorFlow.js with COCO-SSD
+  - MediaPipe for advanced detection
+- **UI Components**: Framer Motion, Lucide React
 
-## Deploy on Vercel
+## Project Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+video-query/
+├── app/
+│   ├── api/query/        # API endpoint for AI queries
+│   ├── page.tsx          # Main application page
+│   └── layout.tsx        # Root layout
+├── components/
+│   ├── VideoSelector.tsx
+│   ├── LiveYouTubeStream.tsx
+│   ├── WebcamCapture.tsx
+│   ├── QueryInterface.tsx
+│   ├── SessionManager.tsx
+│   └── AdvancedSessionManager.tsx
+├── hooks/
+│   ├── useObjectDetection.ts
+│   ├── useHandTracking.ts
+│   └── useAdvancedFaceDetection.ts
+└── lib/
+    ├── gemini.ts         # Gemini API client
+    └── publicCameras.ts  # Camera configurations
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Usage
+
+### Query Live Streams
+1. Select "Live YouTube Stream" mode
+2. Paste a YouTube live stream URL
+3. Ask questions about the video content
+
+### Upload Videos
+1. Select "YouTube Videos" mode
+2. Upload a video file or paste a YouTube URL
+3. Pause at any frame and ask questions
+
+### Use Webcam
+1. Select "Your Webcam" mode
+2. Allow camera permissions
+3. Real-time object detection and analysis
+
+### Example Queries
+- "What objects are visible in this frame?"
+- "How many people can you see?"
+- "Describe the current scene"
+- "What is happening in the video?"
+
+## API Reference
+
+### Query Endpoint
+
+**POST** `/api/query`
+
+Request body:
+```json
+{
+  "imageData": "base64_encoded_image",
+  "query": "What do you see?",
+  "cameraName": "Source name"
+}
+```
+
+Response:
+```json
+{
+  "result": "AI-generated description..."
+}
+```
+
+## Development
+
+Build for production:
+```bash
+npm run build
+```
+
+Start production server:
+```bash
+npm start
+```
+
+Run linter:
+```bash
+npm run lint
+```
+
+## License
+
+MIT License - Free to use for personal and educational purposes
+
+## Author
+
+Nihal Gupta  
+GitHub: [@nihal-5](https://github.com/nihal-5)  
+Location: Raleigh/Cary, NC
+
+## Acknowledgments
+
+- Google Gemini AI for powerful video understanding capabilities
+- TensorFlow.js team for COCO-SSD model
+- Next.js team for the framework
