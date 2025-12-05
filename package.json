@@ -9,6 +9,15 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@mediapipe/face_mesh": "^0.4.1633559619",
+    "@mediapipe/hands": "^0.4.1675469240",
+    "@mediapipe/pose": "^0.5.1675469404",
+    "@tensorflow-models/coco-ssd": "^2.2.3",
+    "@tensorflow/tfjs": "^4.22.0",
+    "face-api.js": "^0.22.2",
+    "framer-motion": "^12.23.25",
+    "lucide-react": "^0.555.0",
     "next": "16.0.6",
     "react": "19.2.0",
     "react-dom": "19.2.0"
