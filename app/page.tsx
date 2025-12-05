@@ -1,65 +1,233 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
+import WebcamCapture from '@/components/WebcamCapture';
+import VideoSelector from '@/components/VideoSelector';
+import LiveYouTubeStream from '@/components/LiveYouTubeStream';
+import QueryInterface from '@/components/QueryInterface';
+import { Video, Radio, Camera } from 'lucide-react';
+
+type SourceType = 'video' | 'live' | 'webcam';
+type VideoType = 'file' | 'youtube';
 
 export default function Home() {
+  const [sourceType, setSourceType] = useState<SourceType>('live');
+  const [videoInfo, setVideoInfo] = useState<{ url: string, type: VideoType } | null>(null);
+
+  const handleVideoSelect = (url: string, type: VideoType) => {
+    setVideoInfo({ url, type });
+  };
+
+  const handleQuery = async (query: string) => {
+    try {
+      let imageData: string;
+
+      if (sourceType === 'live') {
+        const iframe = document.querySelector('iframe[src*="youtube.com/embed"]') as HTMLIFrameElement;
+
+        if (iframe) {
+          const srcMatch = iframe.src.match(/embed\/([^?]+)/);
+          if (srcMatch) {
+            const videoId = srcMatch[1];
+            const response = await fetch(`https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`);
+            const blob = await response.blob();
+
+            return new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onloadend = async () => {
+                const base64 = (reader.result as string).split(',')[1];
+
+                const apiResponse = await fetch('/api/query', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    imageData: base64,
+                    query,
+                    cameraName: 'Live YouTube Stream'
+                  }),
+                });
+
+                if (!apiResponse.ok) {
+                  const error = await apiResponse.json();
+                  throw new Error(error.error || 'Query failed');
+                }
+
+                const data = await apiResponse.json();
+                resolve(data.result);
+              };
+              reader.onerror = reject;
+              reader.readAsDataURL(blob);
+            });
+          }
+        }
+        throw new Error('No live stream loaded. Please paste a YouTube URL first.');
+
+      } else if (sourceType === 'webcam') {
+        const videoElement = document.querySelector('video[autoplay]') as HTMLVideoElement;
+        if (!videoElement) throw new Error('Webcam not active');
+
+        const canvas = document.createElement('canvas');
+        canvas.width = videoElement.videoWidth;
+        canvas.height = videoElement.videoHeight;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) throw new Error('Failed to get canvas context');
+        ctx.drawImage(videoElement, 0, 0);
+        imageData = canvas.toDataURL('image/jpeg').split(',')[1];
+
+      } else {
+        if (videoInfo?.type === 'youtube') {
+          const response = await fetch(`https://i.ytimg.com/vi/${videoInfo.url}/maxresdefault.jpg`);
+          const blob = await response.blob();
+
+          return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = async () => {
+              const base64 = (reader.result as string).split(',')[1];
+
+              const apiResponse = await fetch('/api/query', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  imageData: base64,
+                  query,
+                  cameraName: 'YouTube Video'
+                }),
+              });
+
+              if (!apiResponse.ok) {
+                const error = await apiResponse.json();
+                throw new Error(error.error || 'Query failed');
+              }
+
+              const data = await apiResponse.json();
+              resolve(data.result);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+          });
+        } else {
+          const videoElement = document.querySelector('video[controls]') as HTMLVideoElement;
+          if (!videoElement) throw new Error('No video loaded');
+
+          const canvas = document.createElement('canvas');
+          canvas.width = videoElement.videoWidth;
+          canvas.height = videoElement.videoHeight;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) throw new Error('Failed to get canvas context');
+          ctx.drawImage(videoElement, 0, 0);
+          imageData = canvas.toDataURL('image/jpeg').split(',')[1];
+        }
+      }
+
+      const response = await fetch('/api/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          imageData,
+          query,
+          cameraName: sourceType.toUpperCase()
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Query failed');
+      }
+
+      const data = await response.json();
+      return data.result;
+
+    } catch (error) {
+      console.error('Query error:', error);
+      throw error;
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <main className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-12 px-4">
+      <div className="max-w-6xl mx-auto space-y-8">
+        <div className="text-center">
+          <h1 className="text-5xl font-bold text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+            🎥 AI Video Query System
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-gray-300 text-lg">
+            Ask questions about videos, live streams, or webcam in natural language
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+
+        <div className="flex flex-wrap gap-4 justify-center">
+          <button
+            onClick={() => setSourceType('video')}
+            className={`flex items-center gap-3 px-8 py-4 rounded-xl font-medium transition-all transform hover:scale-105 ${sourceType === 'video'
+              ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/50'
+              : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-700'
+              }`}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <Video className="w-5 h-5" />
+            <span>YouTube Videos</span>
+          </button>
+
+          <button
+            onClick={() => setSourceType('live')}
+            className={`flex items-center gap-3 px-8 py-4 rounded-xl font-medium transition-all transform hover:scale-105 ${sourceType === 'live'
+              ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-500/50'
+              : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-700'
+              }`}
           >
-            Documentation
-          </a>
+            <Radio className="w-5 h-5" />
+            <span>Live YouTube Stream</span>
+          </button>
+
+          <button
+            onClick={() => setSourceType('webcam')}
+            className={`flex items-center gap-3 px-8 py-4 rounded-xl font-medium transition-all transform hover:scale-105 ${sourceType === 'webcam'
+              ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/50'
+              : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-700'
+              }`}
+          >
+            <Camera className="w-5 h-5" />
+            <span>Your Webcam</span>
+          </button>
         </div>
-      </main>
-    </div>
+
+        {sourceType === 'video' && (
+          <VideoSelector onVideoSelect={handleVideoSelect} />
+        )}
+
+        {sourceType === 'live' && (
+          <LiveYouTubeStream />
+        )}
+
+        {sourceType === 'webcam' && (
+          <WebcamCapture />
+        )}
+
+        <QueryInterface onQuery={handleQuery} />
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-12">
+          <div className="p-6 bg-gray-800/50 border border-gray-700 rounded-xl">
+            <div className="text-3xl mb-3">📡</div>
+            <h3 className="text-white font-semibold mb-2">Live Streams</h3>
+            <p className="text-gray-400 text-sm">
+              Paste any YouTube live stream URL and query it
+            </p>
+          </div>
+          <div className="p-6 bg-gray-800/50 border border-gray-700 rounded-xl">
+            <div className="text-3xl mb-3">🤖</div>
+            <h3 className="text-white font-semibold mb-2">AI-Powered</h3>
+            <p className="text-gray-400 text-sm">
+              Gemini 2.0 Flash for accurate image understanding
+            </p>
+          </div>
+          <div className="p-6 bg-gray-800/50 border border-gray-700 rounded-xl">
+            <div className="text-3xl mb-3">💬</div>
+            <h3 className="text-white font-semibold mb-2">Natural Language</h3>
+            <p className="text-gray-400 text-sm">
+              Ask questions in plain English, get instant answers
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
   );
 }
