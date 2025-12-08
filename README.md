@@ -2,6 +2,12 @@
 
 A real-time video analytics application built with Next.js that allows users to query video content using natural language. Supports YouTube live streams, video files, and webcam feeds with AI-powered analysis using Google's Gemini API.
 
+## 🚀 Live Demo
+
+**[View in AI Portfolio Dashboard](https://unharmable-threadlike-ruth.ngrok-free.dev)** | **[Direct Access](https://unharmable-threadlike-ruth.ngrok-free.dev:3000)**
+
+> Part of **[Nihal's AI Portfolio](https://unharmable-threadlike-ruth.ngrok-free.dev)** - Unified dashboard featuring 5 cutting-edge AI services
+
 ![Next.js](https://img.shields.io/badge/Next.js-15-black) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue) ![Gemini API](https://img.shields.io/badge/Gemini-2.0%20Flash-purple)
 
 ## Features
@@ -50,7 +56,7 @@ GEMINI_API_KEY=your_actual_api_key_here
 npm run dev
 ```
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser
+5. Open [https://unharmable-threadlike-ruth.ngrok-free.dev:3000](https://unharmable-threadlike-ruth.ngrok-free.dev:3000) in your browser
 
 ## Tech Stack
 
