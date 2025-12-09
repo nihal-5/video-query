@@ -56,7 +56,7 @@ GEMINI_API_KEY=your_actual_api_key_here
 npm run dev
 ```
 
-5. Open [https://unharmable-threadlike-ruth.ngrok-free.dev:3000](https://unharmable-threadlike-ruth.ngrok-free.dev:3000) in your browser
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
 ## Tech Stack
 
