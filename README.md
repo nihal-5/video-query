@@ -8,7 +8,7 @@ A real-time video analytics application built with Next.js that allows users to 
 
 > Part of **[Nihal's AI Portfolio](https://unharmable-threadlike-ruth.ngrok-free.dev)** - Unified dashboard featuring 5 cutting-edge AI services
 
-![Next.js](https://img.shields.io/badge/Next.js-15-black) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue) ![Gemini API](https://img.shields.io/badge/Gemini-2.0%20Flash-purple)
+![Next.js](https://img.shields.io/badge/Next.js-15-black) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue) ![Gemini API](https://img.shields.io/badge/Gemini-2.0%20Flash-purple) ![License](https://img.shields.io/badge/License-MIT-green)
 
 ## Features
 
