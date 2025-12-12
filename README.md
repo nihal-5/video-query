@@ -199,7 +199,3 @@ Location: Raleigh/Cary, NC
 - Google Gemini AI for powerful video understanding capabilities
 - TensorFlow.js team for COCO-SSD model
 - Next.js team for the framework
-
-## Contributors
-
-Thanks to all contributors who help improve this project!
