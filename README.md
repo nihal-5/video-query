@@ -155,6 +155,35 @@ Run linter:
 npm run lint
 ```
 
+## Troubleshooting
+
+**Node.js version issues:**
+- Ensure you have Node.js 18 or higher: `node --version`
+- If using older version, update via [nodejs.org](https://nodejs.org)
+- Consider using nvm for version management
+
+**API key errors:**
+- Verify `.env.local` file exists in project root
+- Check API key format: should start with valid Gemini key format
+- Restart dev server after updating environment variables
+- Get your key from [Google AI Studio](https://makersuite.google.com/app/apikey)
+
+**Port 3000 already in use:**
+- Find and kill process: `lsof -ti:3000 | xargs kill -9`
+- Or use a different port: `npm run dev -- -p 3001`
+
+**Webcam permission denied:**
+- Check browser permissions in settings
+- Ensure you're using HTTPS or localhost
+- Try a different browser if issues persist
+- Some browsers require explicit permission grant
+
+**Build failures:**
+- Clear cache: `rm -rf .next node_modules`
+- Reinstall dependencies: `npm install`
+- Check for TypeScript errors: `npm run lint`
+- Ensure all peer dependencies are compatible
+
 ## License
 
 MIT License - Free to use for personal and educational purposes
