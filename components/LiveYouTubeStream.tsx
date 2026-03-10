@@ -124,9 +124,9 @@ export default function LiveYouTubeStream() {
                     <strong>💡 How to find live streams:</strong>
                 </p>
                 <ul className="text-gray-400 text-sm space-y-1 ml-4">
-                    <li>• Search YouTube for "live camera 24/7"</li>
-                    <li>• Search for your city + "live stream"</li>
-                    <li>• Look for red "LIVE" badge on videos</li>
+                    <li>• Search YouTube for live camera 24/7</li>
+                    <li>• Search for your city + live stream</li>
+                    <li>• Look for the red LIVE badge on videos</li>
                 </ul>
             </div>
         </div>

@@ -106,7 +106,7 @@ export default function AdvancedSessionManager({
             if (!hand.landmarks || hand.landmarks.length === 0) return;
 
             // Draw hand landmarks
-            hand.landmarks.forEach((landmark, idx) => {
+            hand.landmarks.forEach((landmark) => {
                 const x = landmark.x * canvas.width;
                 const y = landmark.y * canvas.height;
 

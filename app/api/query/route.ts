@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { analyzeImageWithContext } from '@/lib/gemini';
 
 export async function POST(req: NextRequest) {
@@ -37,7 +38,6 @@ Please provide a detailed, accurate answer based on the detection data provided.
       `.trim();
 
             // Use Gemini for text analysis (much cheaper than image analysis)
-            const { GoogleGenerativeAI } = require('@google/generative-ai');
             const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
             const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
 

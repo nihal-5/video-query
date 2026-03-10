@@ -14,10 +14,9 @@ export interface HandDetection {
 export function useHandTracking() {
     const [isReady, setIsReady] = useState(false);
     const [isDetecting, setIsDetecting] = useState(false);
-    const [hands, setHands] = useState<HandDetection[]>([]);
-    const [gestureStats, setGestureStats] = useState<{ [key: string]: number }>({});
+    const [hands] = useState<HandDetection[]>([]);
+    const [gestureStats] = useState<{ [key: string]: number }>({});
 
-    const handsInstanceRef = useRef<any | null>(null);
     const detectionIntervalRef = useRef<number | null>(null);
 
     useEffect(() => {
@@ -36,27 +35,10 @@ export function useHandTracking() {
         loadMediaPipe();
     }, []);
 
-    // Count raised fingers (simplified version)
-    const countFingers = (landmarks: Array<{ x: number; y: number; z: number }>): number => {
-        // Simplified logic - would need actual hand tracking
-        return 0;
-    };
-
-    // Recognize gesture
-    const recognizeGesture = (fingerCount: number): string => {
-        switch (fingerCount) {
-            case 0: return '✊ Fist';
-            case 1: return '☝️ Pointing';
-            case 2: return '✌️ Peace';
-            case 3: return '👌 OK Sign';
-            case 4: return '🤘 Rock';
-            case 5: return '✋ Open Hand';
-            default: return `${fingerCount} Fingers`;
-        }
-    };
-
     // Start detection
     const startDetection = (videoElement: HTMLVideoElement, interval: number = 100) => {
+        void videoElement;
+        void interval;
         setIsDetecting(true);
 
         // Note: Full hand tracking requires MediaPipe setup

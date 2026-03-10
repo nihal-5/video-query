@@ -19,6 +19,7 @@ export default function PublicWebcam({ youtubeId, name }: PublicWebcamProps) {
         video.crossOrigin = 'anonymous';
         video.style.display = 'none';
         document.body.appendChild(video);
+        let hasSetProxyVideo = false;
 
         // Try to get stream from YouTube thumbnail updates
         const interval = setInterval(() => {
@@ -33,11 +34,13 @@ export default function PublicWebcam({ youtubeId, name }: PublicWebcamProps) {
                 if (ctx) {
                     ctx.drawImage(img, 0, 0);
                     video.src = canvas.toDataURL();
+                    if (!hasSetProxyVideo) {
+                        setProxyVideo(video);
+                        hasSetProxyVideo = true;
+                    }
                 }
             };
         }, 1000);
-
-        setProxyVideo(video);
 
         return () => {
             clearInterval(interval);

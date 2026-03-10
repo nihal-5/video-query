@@ -1,17 +1,18 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { Camera, CameraOff } from 'lucide-react';
 import AdvancedSessionManager from '@/components/AdvancedSessionManager';
 
 export default function WebcamCapture() {
     const videoRef = useRef<HTMLVideoElement>(null);
-    const [stream, setStream] = useState<MediaStream | null>(null);
+    const [, setStream] = useState<MediaStream | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [isActive, setIsActive] = useState(false);
     const [sessionSummary, setSessionSummary] = useState<string>('');
+    const [activeVideoElement, setActiveVideoElement] = useState<HTMLVideoElement | null>(null);
 
-    const startWebcam = async () => {
+    const startWebcam = useCallback(async () => {
         try {
             const mediaStream = await navigator.mediaDevices.getUserMedia({
                 video: {
@@ -20,8 +21,10 @@ export default function WebcamCapture() {
                 }
             });
 
-            if (videoRef.current) {
-                videoRef.current.srcObject = mediaStream;
+            const videoElement = videoRef.current;
+            if (videoElement) {
+                videoElement.srcObject = mediaStream;
+                setActiveVideoElement(videoElement);
             }
 
             setStream(mediaStream);
@@ -32,15 +35,16 @@ export default function WebcamCapture() {
             setError('Unable to access webcam. Please check permissions.');
             setIsActive(false);
         }
-    };
+    }, []);
 
-    const stopWebcam = () => {
-        if (stream) {
-            stream.getTracks().forEach(track => track.stop());
-            setStream(null);
-            setIsActive(false);
-        }
-    };
+    const stopWebcam = useCallback(() => {
+        setStream((currentStream) => {
+            currentStream?.getTracks().forEach(track => track.stop());
+            return null;
+        });
+        setActiveVideoElement(null);
+        setIsActive(false);
+    }, []);
 
     useEffect(() => {
         startWebcam();
@@ -48,7 +52,7 @@ export default function WebcamCapture() {
         return () => {
             stopWebcam();
         };
-    }, []);
+    }, [startWebcam, stopWebcam]);
 
     const handleSessionSummary = (summary: string) => {
         setSessionSummary(summary);
@@ -110,9 +114,9 @@ export default function WebcamCapture() {
                 )}
             </div>
 
-            {isActive && videoRef.current && (
+            {isActive && activeVideoElement && (
                 <AdvancedSessionManager
-                    videoElement={videoRef.current}
+                    videoElement={activeVideoElement}
                     onSessionSummary={handleSessionSummary}
                 />
             )}

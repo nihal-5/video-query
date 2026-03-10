@@ -12,7 +12,7 @@ interface QueryResult {
 
 interface QueryInterfaceProps {
     onQuery: (query: string) => Promise<QueryResult>;
-    sessionData?: any; // Detection session data
+    sessionData?: Record<string, unknown>;
     isLoading?: boolean;
 }
 
@@ -44,7 +44,7 @@ export default function QueryInterface({
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!query.trim() || searching) return;
+        if (!query.trim() || searching || isLoading) return;
 
         setSearching(true);
         setError(null);
@@ -74,7 +74,7 @@ export default function QueryInterface({
                         onChange={(e) => setQuery(e.target.value)}
                         placeholder={sessionData ? "Ask about detected objects..." : "Ask anything about the camera feed..."}
                         className="w-full px-6 py-4 pr-14 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                        disabled={searching}
+                        disabled={searching || isLoading}
                     />
                     <button
                         type="submit"

@@ -93,7 +93,7 @@ export default function VideoSelector({ onVideoSelect }: VideoSelectorProps) {
                         controls
                         className="w-full h-auto"
                     >
-                        Your browser doesn't support video playback.
+                        Your browser does not support video playback.
                     </video>
                 </div>
 

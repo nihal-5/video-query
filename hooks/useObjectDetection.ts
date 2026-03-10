@@ -159,7 +159,6 @@ export function useObjectDetection() {
         startDetection,
         stopDetection,
         getDetectionSummary,
-        exportSession,
-        detectionHistory: detectionHistoryRef.current
+        exportSession
     };
 }

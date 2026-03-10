@@ -71,7 +71,7 @@ export default function VideoPlayer({ src, title = 'Video' }: VideoPlayerProps) 
           onLoadedMetadata={handleLoadedMetadata}
           onEnded={() => setIsPlaying(false)}
         >
-          Your browser doesn't support video playback.
+          Your browser does not support video playback.
         </video>
 
         {/* Controls Overlay */}

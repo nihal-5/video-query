@@ -97,7 +97,7 @@ Session Analytics:
     return (
         <div className="space-y-4">
             {/* Detection Overlay Container */}
-            {isDetecting && canvasRef.current && (
+            {isDetecting && (
                 <div ref={containerRef} className="relative -mt-4">
                     <canvas
                         ref={canvasRef}
@@ -195,9 +195,9 @@ Session Analytics:
             {/* Info */}
             <div className="p-4 bg-blue-900/20 border border-blue-500/30 rounded-lg">
                 <p className="text-blue-300 text-sm">
-                    <strong>💡 How it works:</strong> Click "Start Session" to begin real-time detection.
-                    You'll see green boxes around detected objects (people, cars, etc.) and live counts.
-                    Then ask questions like "How many cars were detected?" for AI analysis!
+                    <strong>💡 How it works:</strong> Click &quot;Start Session&quot; to begin real-time detection.
+                    You&apos;ll see green boxes around detected objects (people, cars, etc.) and live counts.
+                    Then ask questions like &quot;How many cars were detected?&quot; for AI analysis!
                 </p>
             </div>
         </div>
